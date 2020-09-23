@@ -1,26 +1,40 @@
 def alphabet_wrap(startchar, shiftvalue):
-    if(ord(startchar) + shiftvalue > ord("Z"))
-        
+    if ord(startchar) + shiftvalue > ord("Z"):
+        return chr(ord("A") + (ord("Z") - (ord(startchar) + shiftvalue)))
+    return chr(ord(startchar) + shiftvalue)
 
+def backwards_alphabet_wrap(startchar, shiftvalue):
+    if ord(startchar) - shiftvalue < ord("A"):
+        return chr(1 + ord("Z") - (shiftvalue - (ord(startchar) - ord("A"))))
+    return chr(ord(startchar) - shiftvalue)
 
 # Caesar Cipher
 # Arguments: string, integer
 # Returns: string
 def encrypt_caesar(plaintext, offset):
-    encrypted = ""    
-    if(plaintext.length == 0):
-        return encrypted
+    encrypted = []  
+    if len(plaintext) == 0:
+        return ""
     for char in plaintext:
         if(ord("A") <= ord(char) <= ord("Z")):
-            encrypted += alphabet_wrap(char, offset)
-    return encrypted
-
+            encrypted.append(alphabet_wrap(char, offset))
+        else:
+            encrypted.append(char)
+    return (" ".join(encrypted)).strip()
             
 
 # Arguments: string, integer
 # Returns: string
 def decrypt_caesar(ciphertext, offset):
-    pass
+    decrypted = []  
+    if len(ciphertext) == 0:
+        return ""
+    for char in ciphertext:
+        if(ord("A") <= ord(char) <= ord("Z")):
+            decrypted.append(backwards_alphabet_wrap(char, offset))
+        else:
+            decrypted.append(char)
+    return (" ".join(decrypted)).strip()
 
 # Vigenere Cipher
 # Arguments: string, string
@@ -55,8 +69,10 @@ def decrypt_mhkc(ciphertext, private_key):
     pass
 
 def main():
-    # Testing code here
-    pass
+    ##print(alphabet_wrap("A", 1))
+    print(encrypt_caesar("EGAN LAI!!", 3))
+    ##print(backwards_alphabet_wrap("A", 1))
+    print(decrypt_caesar("HJDQ ODL!!", 3))
 
 if __name__ == "__main__":
     main()
