@@ -1,12 +1,11 @@
 def alphabet_wrap(startchar, shiftvalue):
-    if ord(startchar) + shiftvalue > ord("Z"):
-        return chr(ord("A") + (ord("Z") - (ord(startchar) + shiftvalue)))
+    if shiftvalue >= 0:
+        if ord(startchar) + shiftvalue > ord("Z"):
+            return chr(ord("A") + (ord("Z") - (ord(startchar) + shiftvalue)))
+    else:
+        if ord(startchar) + shiftvalue < ord("A"):
+            return chr(1 + ord("Z") - ((-1 * shiftvalue) - (ord(startchar) - ord("A"))))
     return chr(ord(startchar) + shiftvalue)
-
-def backwards_alphabet_wrap(startchar, shiftvalue):
-    if ord(startchar) - shiftvalue < ord("A"):
-        return chr(1 + ord("Z") - (shiftvalue - (ord(startchar) - ord("A"))))
-    return chr(ord(startchar) - shiftvalue)
 
 # Caesar Cipher
 # Arguments: string, integer
@@ -31,7 +30,7 @@ def decrypt_caesar(ciphertext, offset):
         return ""
     for char in ciphertext:
         if(ord("A") <= ord(char) <= ord("Z")):
-            decrypted.append(backwards_alphabet_wrap(char, offset))
+            decrypted.append(alphabet_wrap(char, -1 * offset))
         else:
             decrypted.append(char)
     return (" ".join(decrypted)).strip()
@@ -70,9 +69,9 @@ def decrypt_mhkc(ciphertext, private_key):
 
 def main():
     ##print(alphabet_wrap("A", 1))
-    print(encrypt_caesar("EGAN LAI!!", 3))
+    print(encrypt_caesar("ABC", 3))
     ##print(backwards_alphabet_wrap("A", 1))
-    print(decrypt_caesar("HJDQ ODL!!", 3))
+    print(decrypt_caesar("ABC", 3))
 
 if __name__ == "__main__":
     main()
