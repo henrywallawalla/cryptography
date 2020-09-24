@@ -1,11 +1,7 @@
 def alphabet_wrap(startchar, shiftvalue):
-    if shiftvalue >= 0:
-        if ord(startchar) + shiftvalue > ord("Z"):
-            return chr(ord("A") + (ord("Z") - (ord(startchar) + shiftvalue)))
-    else:
-        if ord(startchar) + shiftvalue < ord("A"):
-            return chr(1 + ord("Z") - ((-1 * shiftvalue) - (ord(startchar) - ord("A"))))
-    return chr(ord(startchar) + shiftvalue)
+    start_offset = ord(startchar) - ord("A")
+    final_offset = (start_offset + shiftvalue) % 26
+    return chr(final_offset + ord("A"))
 
 # Caesar Cipher
 # Arguments: string, integer
@@ -19,7 +15,7 @@ def encrypt_caesar(plaintext, offset):
             encrypted.append(alphabet_wrap(char, offset))
         else:
             encrypted.append(char)
-    return (" ".join(encrypted)).strip()
+    return ("".join(encrypted)).strip()
             
 
 # Arguments: string, integer
@@ -33,18 +29,36 @@ def decrypt_caesar(ciphertext, offset):
             decrypted.append(alphabet_wrap(char, -1 * offset))
         else:
             decrypted.append(char)
-    return (" ".join(decrypted)).strip()
+    return ("".join(decrypted)).strip()
+
 
 # Vigenere Cipher
 # Arguments: string, string
 # Returns: string
 def encrypt_vigenere(plaintext, keyword):
-    pass
+    encrypted = []
+    ##making the key
+    fittedkey = ""
+    for i in range((len(plaintext) // len(keyword)) + 1):
+        fittedkey += keyword
+    fittedkey = fittedkey[: len(plaintext)]
+
+    for index in range(len(plaintext)):
+            encrypted.append(alphabet_wrap(plaintext[index], ord(fittedkey[index]) - ord("A")))
+    return ("".join(encrypted)).strip()
 
 # Arguments: string, string
 # Returns: string
 def decrypt_vigenere(ciphertext, keyword):
-    pass
+    decrypted = []
+    fittedkey = ""
+    for i in range((len(ciphertext) // len(keyword)) + 1):
+        fittedkey += keyword
+    fittedkey = fittedkey[: len(ciphertext)]
+
+    for index in range(len(ciphertext)):
+            decrypted.append(alphabet_wrap(ciphertext[index], -1 * ord(fittedkey[index]) - ord("A")))
+    return ("".join(decrypted)).strip()
 
 # Merkle-Hellman Knapsack Cryptosystem
 # Arguments: integer
@@ -68,10 +82,10 @@ def decrypt_mhkc(ciphertext, private_key):
     pass
 
 def main():
-    ##print(alphabet_wrap("A", 1))
-    print(encrypt_caesar("ABC", 3))
-    ##print(backwards_alphabet_wrap("A", 1))
-    print(decrypt_caesar("ABC", 3))
+    ##print(encrypt_caesar("111.A", 3))
+    ##print(decrypt_caesar("111.A", 3))
+    print(encrypt_vigenere("GEEKSFORGEEKS", "AYUSH"))
+    print(decrypt_vigenere("GCYCZFMLYLEIM", "AYUSH"))
 
 if __name__ == "__main__":
     main()
