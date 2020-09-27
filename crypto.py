@@ -74,43 +74,73 @@ def generate_private_key(n=8):
         for j in range(i):
             sumofprevious += private_key[j]
         private_key.append(random.randint(sumofprevious + 1, 2*sumofprevious))
-    return tuple(private_key)
-
-# Arguments: tuple (W, Q, R) - W a length-n tuple of integers, Q and R both integers
-# Returns: B - a length-n tuple of integers
-def create_public_key(private_key):
     sum = 0
-    for i in range(len(private_key)):
+    for i in range(n):
         sum += private_key[i]
     q = random.randint(sum + 1, 2 * sum)
     r = random.randint(2, q - 1)
     while math.gcd(r, q) != 1:
         r = random.randint(2, q - 1)
-    print(q)
-    print(r)
+    private_key.append(q)
+    private_key.append(r)
+    return tuple(private_key)
+
+# Arguments: tuple (W, Q, R) - W a length-n tuple of integers, Q and R both integers
+# Returns: B - a length-n tuple of integers
+def create_public_key(private_key):
     b = []
-    for i in range(len(private_key)):
-        b.append((r*private_key[i]) % q)
+    for i in range(8):
+        b.append((private_key[-1]*private_key[i]) % private_key[-2])
     return tuple(b)
 
 
-
- 
+def bytetobit(ordval):
+    bitlist = [0,0,0,0,0,0,0,0]
+    if ordval >= 128:
+        bitlist[0] = 1
+        ordval = ordval - 128
+    if ordval >= 64:
+        bitlist[1] = 1
+        ordval = ordval - 64
+    if ordval >= 32:
+        bitlist[2] = 1
+        ordval = ordval - 32
+    if ordval >= 16:
+        bitlist[3] = 1
+        ordval = ordval - 16
+    if ordval >= 8:
+        bitlist[4] = 1
+        ordval = ordval - 8
+    if ordval >= 4:
+        bitlist[5] = 1
+        ordval = ordval - 4
+    if ordval >= 2:
+        bitlist[6] = 1
+        ordval = ordval - 2
+    if ordval >= 1:
+        bitlist[7] = 1
+        ordval = ordval - 1
+    return bitlist
 
 # Arguments: string, tuple B
 # Returns: list of integers
 def encrypt_mhkc(plaintext, public_key):
+    encrypted = []
+    for char in plaintext:
+        asciival = ord(char)
+        bitlist = bytetobit(asciival)
+        encrypted_byte = []
+        for j in range(len(public_key)):
+            encrypted_byte.append(public_key[j] * bitlist[j])
+        encrypted.append(encrypted_byte)
+    return encrypted
 
-    pass
-
- 
+def bittobyte(bitlist):
+    return bitlist[0]*128 + bitlist[1]*64 + bitlist[2]*32 + bitlist[3]*16 + bitlist[4]*8 + bitlist[5]*4 + bitlist[6]*2 + bitlist[7]
 
 # Arguments: list of integers, private key (W, Q, R) with W a tuple.
-
 # Returns: bytearray or str of plaintext
-
 def decrypt_mhkc(ciphertext, private_key):
-
     pass
 
 
@@ -121,7 +151,8 @@ def main():
     ##print(decrypt_vigenere("GCYCZFMLYLEIM", "AYUSH"))
     privkey = generate_private_key()
     print(privkey)
-    print(create_public_key(privkey))
-
+    publickey = create_public_key(privkey)
+    print(publickey)
+    ##print(encrypt_mhkc("HI", publickey))
 if __name__ == "__main__":
     main()
