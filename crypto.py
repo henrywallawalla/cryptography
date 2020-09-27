@@ -1,3 +1,6 @@
+import random
+import math
+
 def alphabet_wrap(startchar, shiftvalue):
     start_offset = ord(startchar) - ord("A")
     final_offset = (start_offset + shiftvalue) % 26
@@ -60,32 +63,65 @@ def decrypt_vigenere(ciphertext, keyword):
             decrypted.append(alphabet_wrap(ciphertext[index], -1 * ord(fittedkey[index]) - ord("A")))
     return ("".join(decrypted)).strip()
 
+
 # Merkle-Hellman Knapsack Cryptosystem
 # Arguments: integer
 # Returns: tuple (W, Q, R) - W a length-n tuple of integers, Q and R both integers
 def generate_private_key(n=8):
-    pass
+    private_key = []
+    for i in range(n):
+        sumofprevious = 1
+        for j in range(i):
+            sumofprevious += private_key[j]
+        private_key.append(random.randint(sumofprevious + 1, 2*sumofprevious))
+    return tuple(private_key)
 
 # Arguments: tuple (W, Q, R) - W a length-n tuple of integers, Q and R both integers
-# Returns: tuple B - a length-n tuple of integers
+# Returns: B - a length-n tuple of integers
 def create_public_key(private_key):
-    pass
+    sum = 0
+    for i in range(len(private_key)):
+        sum += private_key[i]
+    q = random.randint(sum + 1, 2 * sum)
+    r = random.randint(2, q - 1)
+    while math.gcd(r, q) != 1:
+        r = random.randint(2, q - 1)
+    print(q)
+    print(r)
+    b = []
+    for i in range(len(private_key)):
+        b.append((r*private_key[i]) % q)
+    return tuple(b)
 
-# Arguments: string, tuple (W, Q, R)
+
+
+ 
+
+# Arguments: string, tuple B
 # Returns: list of integers
 def encrypt_mhkc(plaintext, public_key):
+
     pass
 
-# Arguments: list of integers, tuple B - a length-n tuple of integers
+ 
+
+# Arguments: list of integers, private key (W, Q, R) with W a tuple.
+
 # Returns: bytearray or str of plaintext
+
 def decrypt_mhkc(ciphertext, private_key):
+
     pass
+
 
 def main():
     ##print(encrypt_caesar("111.A", 3))
     ##print(decrypt_caesar("111.A", 3))
-    print(encrypt_vigenere("GEEKSFORGEEKS", "AYUSH"))
-    print(decrypt_vigenere("GCYCZFMLYLEIM", "AYUSH"))
+    ##print(encrypt_vigenere("GEEKSFORGEEKS", "AYUSH"))
+    ##print(decrypt_vigenere("GCYCZFMLYLEIM", "AYUSH"))
+    privkey = generate_private_key()
+    print(privkey)
+    print(create_public_key(privkey))
 
 if __name__ == "__main__":
     main()
