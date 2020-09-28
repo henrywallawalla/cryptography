@@ -81,16 +81,15 @@ def generate_private_key(n=8):
     r = random.randint(2, q - 1)
     while math.gcd(r, q) != 1:
         r = random.randint(2, q - 1)
-    private_key.append(q)
-    private_key.append(r)
-    return tuple(private_key)
+    return private_key,q,r
 
 # Arguments: tuple (W, Q, R) - W a length-n tuple of integers, Q and R both integers
 # Returns: B - a length-n tuple of integers
 def create_public_key(private_key):
+    w, q, r = private_key
     b = []
-    for i in range(8):
-        b.append((private_key[-1]*private_key[i]) % private_key[-2])
+    for i in w:
+        b.append(r*i % q)
     return tuple(b)
 
 
@@ -132,27 +131,61 @@ def encrypt_mhkc(plaintext, public_key):
         encrypted_byte = []
         for j in range(len(public_key)):
             encrypted_byte.append(public_key[j] * bitlist[j])
-        encrypted.append(encrypted_byte)
+        encrypted.append(sum(encrypted_byte))
     return encrypted
 
 def bittobyte(bitlist):
     return bitlist[0]*128 + bitlist[1]*64 + bitlist[2]*32 + bitlist[3]*16 + bitlist[4]*8 + bitlist[5]*4 + bitlist[6]*2 + bitlist[7]
 
+def getS(q, r):
+	s = 0
+	while (r*s)%q != 1:
+		s += 1
+	return s
+
 # Arguments: list of integers, private key (W, Q, R) with W a tuple.
 # Returns: bytearray or str of plaintext
 def decrypt_mhkc(ciphertext, private_key):
-    pass
+	w, q, r = private_key
+	s = getS(q,r)
+	Cprime = 69
+	decrypted = ""
+
+	for c in ciphertext:
+		Cprime = c * s%q
+		Cdecrypted = []
+		for i in reversed(w):
+			if i <= Cprime:
+				Cdecrypted.append(1)
+				Cprime -= i
+			else:
+				Cdecrypted.append(0)
+		decrypted += chr(bittobyte(list(reversed(Cdecrypted))))
+
+
+	return decrypted
 
 
 def main():
+	private_key = generate_private_key()
+	print(private_key)
+	public_key = create_public_key(private_key)
+	print(public_key)
+	encrypted = encrypt_mhkc("HELLO", public_key)
+	print(encrypted)
+	print(decrypt_mhkc(encrypted, private_key))
     ##print(encrypt_caesar("111.A", 3))
     ##print(decrypt_caesar("111.A", 3))
     ##print(encrypt_vigenere("GEEKSFORGEEKS", "AYUSH"))
     ##print(decrypt_vigenere("GCYCZFMLYLEIM", "AYUSH"))
-    privkey = generate_private_key()
-    print(privkey)
-    publickey = create_public_key(privkey)
-    print(publickey)
-    ##print(encrypt_mhkc("HI", publickey))
+   ##privkey = generate_private_key()
+    ##print(privkey)
+    ##publickey = create_public_key(privkey)
+    ##print(publickey)
+    ##print(getS(privkey[-2], privkey[-1]))
+    ##dog = encrypt_mhkc("HI", publickey)
+    ##print(dog)
+    ##print(decrypt_mhkc(dog, privkey))
+    #print(getS(29,3))
 if __name__ == "__main__":
     main()
