@@ -47,7 +47,7 @@ def encrypt_vigenere(plaintext, keyword):
     fittedkey = fittedkey[: len(plaintext)]
 
     for index in range(len(plaintext)):
-            encrypted.append(alphabet_wrap(plaintext[index], ord(fittedkey[index]) - ord("A")))
+        encrypted.append(alphabet_wrap(plaintext[index], ord(fittedkey[index]) - ord("A")))
     return ("".join(encrypted)).strip()
 
 # Arguments: string, string
@@ -148,19 +148,19 @@ def getS(q, r):
 def decrypt_mhkc(ciphertext, private_key):
 	w, q, r = private_key
 	s = getS(q,r)
-	Cprime = 69
+	c_prime = 69
 	decrypted = ""
 
 	for c in ciphertext:
-		Cprime = c * s%q
+		c_prime = c * s%q
 		Cdecrypted = []
 		for i in reversed(w):
-			if i <= Cprime:
+			if i <= c_prime:
 				Cdecrypted.append(1)
-				Cprime -= i
+				c_prime -= i
 			else:
-				Cdecrypted.append(0)
-		decrypted += chr(bittobyte(list(reversed(Cdecrypted))))
+				c_decrypted.append(0)
+		decrypted += chr(bittobyte(list(reversed(c_decrypted))))
 	return decrypted
 
 def main():
