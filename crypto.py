@@ -161,31 +161,14 @@ def decrypt_mhkc(ciphertext, private_key):
 			else:
 				Cdecrypted.append(0)
 		decrypted += chr(bittobyte(list(reversed(Cdecrypted))))
-
-
 	return decrypted
 
-
 def main():
-	private_key = generate_private_key()
-	print(private_key)
-	public_key = create_public_key(private_key)
-	print(public_key)
-	encrypted = encrypt_mhkc("HELLO", public_key)
-	print(encrypted)
-	print(decrypt_mhkc(encrypted, private_key))
-    ##print(encrypt_caesar("111.A", 3))
-    ##print(decrypt_caesar("111.A", 3))
-    ##print(encrypt_vigenere("GEEKSFORGEEKS", "AYUSH"))
-    ##print(decrypt_vigenere("GCYCZFMLYLEIM", "AYUSH"))
-   ##privkey = generate_private_key()
-    ##print(privkey)
-    ##publickey = create_public_key(privkey)
-    ##print(publickey)
-    ##print(getS(privkey[-2], privkey[-1]))
-    ##dog = encrypt_mhkc("HI", publickey)
-    ##print(dog)
-    ##print(decrypt_mhkc(dog, privkey))
-    #print(getS(29,3))
+    private_key = generate_private_key()
+    public_key = create_public_key(private_key)
+    encrypted = encrypt_mhkc("CHOCO_THIB", public_key)
+    print(encrypted)
+    print(decrypt_mhkc(encrypted, private_key))
+
 if __name__ == "__main__":
     main()
