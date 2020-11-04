@@ -153,14 +153,14 @@ def decrypt_mhkc(ciphertext, private_key):
 
 	for c in ciphertext:
 		c_prime = c * s%q
-		Cdecrypted = []
+		decrypted = []
 		for i in reversed(w):
 			if i <= c_prime:
-				Cdecrypted.append(1)
+				decrypted.append(1)
 				c_prime -= i
 			else:
-				c_decrypted.append(0)
-		decrypted += chr(bittobyte(list(reversed(c_decrypted))))
+				decrypted.append(0)
+		decrypted += chr(bittobyte(list(reversed(decrypted))))
 	return decrypted
 
 def main():
