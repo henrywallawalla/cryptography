@@ -166,7 +166,7 @@ def main():
 	 #print(getS(29,3))
 	private_key = generate_private_key()
 	public_key = create_public_key(private_key)
-	encrypted = encrypt_mhkc("teeronisaminority", public_key)
+	encrypted = encrypt_mhkc("Diggitydog", public_key)
 	print(encrypted)
 	print(decrypt_mhkc(encrypted, private_key))
 
