@@ -133,18 +133,18 @@ def getS(q, r):
 def decrypt_mhkc(ciphertext, private_key):
 	w, q, r = private_key
 	s = getS(q,r)
-	Cprime = 69
+	c_prime = 69
 	decrypted = ""
 	for c in ciphertext:
-		Cprime = c * s%q
-		Cdecrypted = []
+		c_prime = c * s%q
+		c_decrypted = []
 		for i in reversed(w):
-			if i <= Cprime:
-				Cdecrypted.append(1)
-				Cprime -= i
+			if i <= c_prime:
+				c_decrypted.append(1)
+				c_prime -= i
 			else:
-				Cdecrypted.append(0)
-		decrypted += chr(bittobyte(list(reversed(Cdecrypted))))
+				c_decrypted.append(0)
+		decrypted += chr(bittobyte(list(reversed(c_decrypted))))
 
 
 	return decrypted
@@ -164,13 +164,13 @@ def main():
 	 ##print(dog)
 	 ##print(decrypt_mhkc(dog, privkey))
 	 #print(getS(29,3))
-	private_key = ((10, 14, 35, 115, 248, 677, 1413, 3644), 10242, 5)
-	public_key = (50, 70, 175, 575, 1240, 3385, 7065, 7978)
-	encrypted = encrypt_mhkc("FOREACHEPSILONGREATERTHANDELTA", public_key)
+	private_key = generate_private_key()
+	public_key = create_public_key(private_key)
+	encrypted = encrypt_mhkc("teeronisaminority", public_key)
 	print(encrypted)
 	print(decrypt_mhkc(encrypted, private_key))
 
-if __name__ == "__main__":
+if __name__ == "__main__": 
 	main() 
 
 
